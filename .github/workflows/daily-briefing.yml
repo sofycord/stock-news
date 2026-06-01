@@ -1,0 +1,29 @@
+name: Daily Stock Briefing
+
+on:
+  schedule:
+    - cron: "0 14 * * *"   # 9:00 AM Panama time (UTC-5)
+  workflow_dispatch:        # allows manual trigger from GitHub UI
+
+jobs:
+  send-briefing:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run briefing
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          SMTP_USER:         ${{ secrets.SMTP_USER }}
+          SMTP_PASS:         ${{ secrets.SMTP_PASS }}
+          SMTP_HOST:         smtp.gmail.com
+          SMTP_PORT:         "587"
+          RECIPIENT_EMAIL:   pedrocordovez@ovni.com
+        run: python stock_news.py --now
