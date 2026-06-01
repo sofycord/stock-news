@@ -1,0 +1,9 @@
+[build]
+builder = "NIXPACKS"
+
+[deploy]
+# 9:00 AM Panama time (UTC-5, no DST) = 14:00 UTC
+cronSchedule = "0 14 * * *"
+startCommand = "python stock_news.py --now"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
